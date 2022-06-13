@@ -19,6 +19,8 @@ class ToDoVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.bindToKeyboard()
+        
+        NetworkService.shared.getTodos()
     }
     
     @IBAction func addTaskBtnWasPressed(_ sender: Any) {

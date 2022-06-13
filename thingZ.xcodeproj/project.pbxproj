@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		152B561A285777C700E55E78 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152B5619285777C700E55E78 /* Todo.swift */; };
 		152B561C2857783D00E55E78 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152B561B2857783C00E55E78 /* APIError.swift */; };
+		152B561F285778CF00E55E78 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152B561E285778CF00E55E78 /* NetworkService.swift */; };
 		154B73752857542100A45F20 /* TodoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B73742857542100A45F20 /* TodoCell.swift */; };
 		15A589A128570BF700BB88B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A589A028570BF700BB88B1 /* AppDelegate.swift */; };
 		15A589A328570BF700BB88B1 /* ToDoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A589A228570BF700BB88B1 /* ToDoVC.swift */; };
@@ -22,6 +23,7 @@
 /* Begin PBXFileReference section */
 		152B5619285777C700E55E78 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		152B561B2857783C00E55E78 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		152B561E285778CF00E55E78 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		154B73742857542100A45F20 /* TodoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCell.swift; sourceTree = "<group>"; };
 		15A5899D28570BF700BB88B1 /* thingZ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = thingZ.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15A589A028570BF700BB88B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +47,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		152B561D2857789E00E55E78 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				152B561E285778CF00E55E78 /* NetworkService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		154B7373285753CF00A45F20 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -73,9 +83,10 @@
 		15A5899F28570BF700BB88B1 /* thingZ */ = {
 			isa = PBXGroup;
 			children = (
+				152B561D2857789E00E55E78 /* Services */,
+				15AE7E2728572F460098F72D /* Controller */,
 				154B7373285753CF00A45F20 /* Model */,
 				15AE7E2828572F4F0098F72D /* View */,
-				15AE7E2728572F460098F72D /* Controller */,
 				15A589A028570BF700BB88B1 /* AppDelegate.swift */,
 				15A589A428570BF700BB88B1 /* Main.storyboard */,
 				15A589A728570BFF00BB88B1 /* Assets.xcassets */,
@@ -176,6 +187,7 @@
 			files = (
 				15AE7E2C285734140098F72D /* TaskTxtField.swift in Sources */,
 				152B561A285777C700E55E78 /* Todo.swift in Sources */,
+				152B561F285778CF00E55E78 /* NetworkService.swift in Sources */,
 				154B73752857542100A45F20 /* TodoCell.swift in Sources */,
 				15A589A328570BF700BB88B1 /* ToDoVC.swift in Sources */,
 				15A589A128570BF700BB88B1 /* AppDelegate.swift in Sources */,
