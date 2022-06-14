@@ -16,35 +16,35 @@ class NetworkService {
     
     let session = URLSession(configuration: .default)
     
-    func getTodos() {
+    func getTodos(_ onSuccess: @escaping (Todos) -> Void, onError: @escaping (String) -> Void) {
         let url = URL(string: "\(URL_BASE)")!
         
         let task = session.dataTask(with: url) { (data, response, error) in
-            if let error = error {
-                debugPrint(error.localizedDescription)
-                return
-            }
             
-            guard let data = data, let response = response as? HTTPURLResponse else {
-                debugPrint("Invalid data or response")
-                return
-            }
-            
-            
-            do {
-                if response.statusCode == 200 {
-                    let items = try JSONDecoder().decode(Todos.self, from: data)
-                    print(items)
-//                    handle success
+            DispatchQueue.main.async {
+                if let error = error {
+                    onError(error.localizedDescription)
+                    return
                 }
-                else {
-                    let err = try JSONDecoder().decode(APIError.self, from: data)
-//                    handle failure
+                
+                guard let data = data, let response = response as? HTTPURLResponse else {
+                    onError("Invalid data or response")
+                    return
                 }
-            } catch {
-                debugPrint(error.localizedDescription)
+                
+                do {
+                    if response.statusCode == 200 {
+                        let items = try JSONDecoder().decode(Todos.self, from: data)
+                        onSuccess(items)
+                    }
+                    else {
+                        let err = try JSONDecoder().decode(APIError.self, from: data)
+                        onError(err.message)
+                    }
+                } catch {
+                    onError(error.localizedDescription)
+                }
             }
-            
         }
         task.resume()
     }

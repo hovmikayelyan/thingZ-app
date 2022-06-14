@@ -9,18 +9,33 @@
 import UIKit
 
 class ToDoVC: UIViewController {
-
+    
+    @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var tasksTable: UITableView!
     @IBOutlet weak var addTaskBtn: UIButton!
     @IBOutlet weak var newTaskView: UIView!
     @IBOutlet weak var taskTxtField: TaskTxtField!
     @IBOutlet weak var prioritySegment: UISegmentedControl!
     
+    var todos = Array<Todo>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.bindToKeyboard()
         
-        NetworkService.shared.getTodos()
+        tasksTable.delegate = self
+        tasksTable.dataSource = self
+        getTodos()
+        
+        self.bindToKeyboard()
+    }
+    
+    func getTodos() {
+        NetworkService.shared.getTodos({ (todos) in
+            self.todos = todos.items
+            self.tasksTable.reloadData()
+        }) { (errorMessage) in
+            debugPrint(errorMessage)
+        }
     }
     
     @IBAction func addTaskBtnWasPressed(_ sender: Any) {
@@ -28,38 +43,53 @@ class ToDoVC: UIViewController {
     
 }
 
+extension ToDoVC: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return todos.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "TodoCell") as? TodoCell {
+            cell.updateCell(todo: todos[indexPath.row])
+            return cell
+        }
+        
+        return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+}
 
 extension ToDoVC {
 
     func bindToKeyboard() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ToDoVC.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ToDoVC.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-
-    @objc func keyboardWillChange(_ notification: NSNotification) {
-        let duration = notification.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
-        let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
-        let startingFrame = (notification.userInfo![UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
-        let endingFrame = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        let deltaY = endingFrame.origin.y - startingFrame.origin.y
-
-        UIView.animateKeyframes(withDuration: duration, delay: 0.0, options: UIViewKeyframeAnimationOptions(rawValue: curve), animations: {
-            self.view.frame.origin.y += deltaY
-        }, completion: nil)
-
-    }
-
-    func keyboardWillShow(notification: NSNotification) {
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0 {
                 self.view.frame.origin.y -= keyboardSize.height
+                
+                tasksTable.contentInset = UIEdgeInsets(top: keyboardSize.height, left: 0, bottom: 0, right: 0)
             }
+           
         }
     }
-
-    func keyboardWillHide(notification: NSNotification) {
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
         if self.view.frame.origin.y != 0 {
             self.view.frame.origin.y = 0
+            
+            tasksTable.contentInset = .zero
         }
+        
     }
 }
