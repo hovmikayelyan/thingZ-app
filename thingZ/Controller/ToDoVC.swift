@@ -39,6 +39,21 @@ class ToDoVC: UIViewController {
     }
     
     @IBAction func addTaskBtnWasPressed(_ sender: Any) {
+        
+        guard let taskItem = taskTxtField.text, !taskItem.isEmpty else {
+            debugPrint("Todo item must have a title, focusing on textfield.")
+            taskTxtField.becomeFirstResponder()
+            return
+        }
+        
+        let todo = Todo(item: taskItem, priority: prioritySegment.selectedSegmentIndex)
+        NetworkService.shared.addTodo(todo: todo, onSuccess: { (todos) in
+            self.taskTxtField.text = ""
+            self.todos = todos.items
+            self.tasksTable.reloadData()
+        }) {(errorMessage) in
+            debugPrint(errorMessage)
+        }
     }
     
 }
